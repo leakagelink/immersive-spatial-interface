@@ -3,7 +3,8 @@ import { Bell, ChevronRight, Download, FileText, LayoutGrid, Pencil, RotateCcw, 
 import { useRef } from "react";
 import { toast } from "sonner";
 import { Cube3D, Page, Tilt } from "@/components/app/ui3d";
-import { currentPrice, fmt, fmtDate, profitOf, stockState, useStore } from "@/lib/store";
+import { PPhoto } from "@/components/app/lists";
+import { billDue, currentPrice, fmt, fmtDate, profitOf, stockState, useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/")({
   ssr: false,
@@ -40,9 +41,10 @@ function HeroCube() {
 }
 
 function Home() {
-  const { storeName, setStoreName, categories, vendors, products, importData, resetDemo } = useStore();
+  const { storeName, setStoreName, categories, vendors, products, bills, importData, resetDemo } = useStore();
   const fileRef = useRef<HTMLInputElement>(null);
   const low = products.filter((p) => stockState(p) !== "in");
+  const due = bills.reduce((a, b) => a + billDue(b), 0);
   const avgProfit = products.length ? products.reduce((a, p) => a + profitOf(currentPrice(p)), 0) / products.length : 0;
   const recent = [...products].sort((a, b) => currentPrice(b).date.localeCompare(currentPrice(a).date)).slice(0, 5);
 
@@ -95,11 +97,12 @@ function Home() {
           </div>
           <HeroCube />
         </div>
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-5">
           {[
             { l: "Products", v: products.length },
             { l: "Vendors", v: vendors.length },
             { l: "Avg profit", v: `₹${fmt(avgProfit)}` },
+            { l: "Bakaya (dues)", v: `₹${fmt(due)}`, warn: due > 0 },
             { l: "Stock alerts", v: low.length, warn: low.length > 0 },
           ].map((s) => (
             <div key={s.l} className="rounded-2xl bg-background/50 p-3 ring-1 ring-border" style={{ transform: "translateZ(20px)" }}>
@@ -130,11 +133,14 @@ function Home() {
 
       {low.length > 0 && (
         <section className="mt-8">
-          <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-bold"><Bell className="h-4 w-4 text-cp" /> Stock alerts</h2>
+          <div className="mb-3 flex items-center justify-between gap-2">
+            <h2 className="flex items-center gap-2 font-display text-lg font-bold"><Bell className="h-4 w-4 text-cp" /> Stock alerts</h2>
+            <Link to="/admin" className="shrink-0 rounded-xl bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground">Reorder list</Link>
+          </div>
           <div className="flex gap-3 overflow-x-auto pb-2">
             {low.map((p) => (
               <Link key={p.id} to="/products/$productId" params={{ productId: p.id }} className="glass w-40 shrink-0 rounded-2xl p-3">
-                <div className="text-3xl">{p.emoji}</div>
+                <PPhoto p={p} className="h-10 w-10 text-2xl" />
                 <div className="mt-2 truncate text-sm font-semibold">{p.name}</div>
                 <div className={`text-xs font-bold ${p.stock <= 0 ? "text-destructive" : "text-cp"}`}>{p.stock <= 0 ? "Out of stock" : `Only ${p.stock} left`}</div>
               </Link>
@@ -150,7 +156,7 @@ function Home() {
             const c = currentPrice(p);
             return (
               <Link key={p.id} to="/products/$productId" params={{ productId: p.id }} className="glass flex items-center gap-3 rounded-2xl p-3">
-                <span className="text-2xl">{p.emoji}</span>
+                <PPhoto p={p} className="h-9 w-9 text-xl" />
                 <div className="min-w-0 flex-1">
                   <div className="truncate text-sm font-semibold">{p.name}</div>
                   <div className="text-xs text-muted-foreground">{fmtDate(c.date)}</div>
