@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { BarChart3, Download, LayoutGrid, Package, Pencil, Plus, RotateCcw, Settings, Trash2, Truck, Upload } from "lucide-react";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { EMOJIS, Field, inputCls, ProductDialog, VendorDialog } from "@/components/app/forms";
@@ -144,7 +144,7 @@ function Check({ on, onClick }: { on: boolean; onClick: () => void }) {
   );
 }
 
-function BulkBar({ count, onClear, children }: { count: number; onClear: () => void; children: React.ReactNode }) {
+function BulkBar({ count, onClear, children }: { count: number; onClear: () => void; children: ReactNode }) {
   if (!count) return null;
   return (
     <div className="glass sticky top-24 z-20 mb-3 flex flex-wrap items-center gap-2 rounded-2xl p-2 ring-1 ring-primary/40">
@@ -231,7 +231,7 @@ function ProductsAdmin() {
           );
         })}
       </div>
-      <ProductDialog key={edit?.id ?? "new"} open={open} onOpenChange={setOpen} product={edit} />
+      <ProductDialog key={edit?.id ?? "new"} open={open} onOpenChange={setOpen} {...(edit ? { product: edit } : {})} />
       <BulkPriceDialog open={bulk} onOpenChange={setBulk} onApply={(field, mode, value, date) => {
         products.filter((p) => sel.has(p.id)).forEach((p) => addPrice(p.id, applyBulkPrice(currentPrice(p), field, mode, value, date)));
         toast.success(`Prices updated for ${sel.size} products`); clear(); setBulk(false);
@@ -320,7 +320,7 @@ function VendorsAdmin() {
           </div>
         ))}
       </div>
-      <VendorDialog key={edit?.id ?? "new"} open={open} onOpenChange={setOpen} vendor={edit} />
+      <VendorDialog key={edit?.id ?? "new"} open={open} onOpenChange={setOpen} {...(edit ? { vendor: edit } : {})} />
     </div>
   );
 }
@@ -411,7 +411,7 @@ function SettingsAdmin() {
       <section className="glass space-y-3 rounded-3xl p-5">
         <h3 className="font-display font-bold">Store details</h3>
         <Field label="Store name"><input className={inputCls} value={n} onChange={(e) => setN(e.target.value)} /></Field>
-        <PrimaryButton onClick={() => { if (!n.trim()) return toast.error("Name required"); setStoreName(n.trim()); toast.success("Saved"); }}>Save</PrimaryButton>
+        <PrimaryButton onClick={() => { if (!n.trim()) { toast.error("Name required"); return; } setStoreName(n.trim()); toast.success("Saved"); }}>Save</PrimaryButton>
       </section>
       <section className="glass space-y-3 rounded-3xl p-5">
         <h3 className="font-display font-bold">Backup & export</h3>

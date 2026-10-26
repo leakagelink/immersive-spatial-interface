@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Bell, ChevronRight, Download, FileText, LayoutGrid, Pencil, RotateCcw, Store, Tag, Truck, Upload } from "lucide-react";
+import { Bell, ChevronRight, Download, FileText, LayoutGrid, Pencil, RotateCcw, Settings, Store, Tag, Truck, Upload } from "lucide-react";
 import { useRef } from "react";
 import { toast } from "sonner";
 import { Cube3D, Page, Tilt } from "@/components/app/ui3d";
@@ -91,6 +91,7 @@ function Home() {
               <Pencil className="h-4 w-4 text-muted-foreground opacity-0 transition group-hover:opacity-100" />
             </button>
             <p className="mt-1 text-sm text-muted-foreground">Manage Products & Suppliers</p>
+            <Link to="/admin" className="mt-3 inline-flex items-center gap-1.5 rounded-xl bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground"><Settings className="h-3.5 w-3.5" />Admin Panel</Link>
           </div>
           <HeroCube />
         </div>
