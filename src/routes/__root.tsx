@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 
 import { Toaster } from "@/components/ui/sonner";
 import { BottomDock } from "@/components/app/BottomDock";
+import { Splash } from "@/components/app/Splash";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
@@ -127,6 +128,7 @@ function RootComponent() {
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
       <BottomDock />
+      <Splash />
       <Toaster position="top-center" richColors />
     </QueryClientProvider>
   );

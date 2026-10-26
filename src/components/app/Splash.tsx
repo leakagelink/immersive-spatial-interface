@@ -4,7 +4,7 @@ import { useStore } from "@/lib/store";
 export function Splash() {
   const [show, setShow] = useState(false);
   const [leaving, setLeaving] = useState(false);
-  const name = useStore((s) => s.settings?.storeName) || "Rj Store";
+  const name = useStore((s) => s.storeName) || "Rj Store";
 
   useEffect(() => {
     if (sessionStorage.getItem("rj-splash")) return;

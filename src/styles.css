@@ -158,3 +158,32 @@
 
 @layer base {
 }
+
+/* ---------- 3D splash ---------- */
+.splash { position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .6rem; background: radial-gradient(circle at 50% 40%, color-mix(in oklab, var(--primary) 14%, var(--background)), var(--background) 65%); overflow: hidden; perspective: 900px; transition: opacity .6s ease, transform .6s ease; cursor: pointer; }
+.splash-out { opacity: 0; transform: scale(1.12); pointer-events: none; }
+.splash-glow { position: absolute; width: 60vmin; height: 60vmin; border-radius: 50%; background: radial-gradient(circle, color-mix(in oklab, var(--primary) 35%, transparent), transparent 70%); filter: blur(30px); animation: splashPulse 2.4s ease-in-out infinite; }
+.splash-grid { position: absolute; bottom: -10%; left: -50%; width: 200%; height: 55%; background-image: linear-gradient(color-mix(in oklab, var(--primary) 30%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in oklab, var(--primary) 30%, transparent) 1px, transparent 1px); background-size: 48px 48px; transform: rotateX(72deg); mask-image: linear-gradient(to top, black, transparent); animation: splashGrid 2s linear infinite; }
+.splash-dot { position: absolute; bottom: -10px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); animation: splashFloat 3s ease-in infinite; }
+.splash-stage { position: relative; width: 150px; height: 150px; display: grid; place-items: center; transform-style: preserve-3d; margin-bottom: 1.2rem; }
+.splash-ring { position: absolute; inset: -30px; border-radius: 50%; border: 2px solid color-mix(in oklab, var(--primary) 60%, transparent); transform: rotateX(75deg); animation: splashRing 3s linear infinite; }
+.splash-ring.r2 { inset: -50px; border-color: color-mix(in oklab, var(--accent) 50%, transparent); animation-duration: 4.5s; animation-direction: reverse; }
+.splash-cube { position: relative; width: 90px; height: 90px; transform-style: preserve-3d; animation: splashCube 3s cubic-bezier(.6,.1,.3,1) infinite, splashIn .9s cubic-bezier(.2,1.4,.4,1) both; }
+.splash-cube .face { position: absolute; inset: 0; display: grid; place-items: center; font-family: Sora, sans-serif; font-weight: 800; font-size: 2rem; color: var(--primary-foreground); border-radius: 18px; border: 1px solid color-mix(in oklab, var(--primary) 50%, white); background: linear-gradient(135deg, var(--primary), color-mix(in oklab, var(--primary) 55%, var(--accent))); box-shadow: inset 0 0 25px color-mix(in oklab, white 35%, transparent); }
+.splash-cube .f { transform: translateZ(45px); } .splash-cube .b { transform: rotateY(180deg) translateZ(45px); }
+.splash-cube .l { transform: rotateY(-90deg) translateZ(45px); } .splash-cube .r { transform: rotateY(90deg) translateZ(45px); }
+.splash-cube .t { transform: rotateX(90deg) translateZ(45px); background: linear-gradient(135deg, var(--accent), var(--primary)); }
+.splash-cube .d { transform: rotateX(-90deg) translateZ(45px); }
+.splash-title { position: relative; font-family: Sora, sans-serif; font-weight: 800; font-size: clamp(2rem, 8vw, 3.4rem); letter-spacing: -.02em; background: linear-gradient(90deg, var(--primary), var(--accent), var(--primary)); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; color: transparent; animation: rise .8s .3s both, splashShine 2.5s linear infinite; }
+.splash-sub { position: relative; color: var(--muted-foreground); font-size: .9rem; letter-spacing: .12em; text-transform: uppercase; animation: rise .8s .55s both; }
+.splash-bar { position: relative; width: min(220px, 60vw); height: 4px; border-radius: 99px; background: color-mix(in oklab, var(--foreground) 12%, transparent); overflow: hidden; margin-top: 1.4rem; animation: rise .8s .7s both; }
+.splash-bar span { position: absolute; inset: 0; background: linear-gradient(90deg, var(--primary), var(--accent)); transform-origin: left; animation: splashLoad 2.4s .4s ease-out both; box-shadow: 0 0 12px var(--primary); }
+@keyframes splashCube { 0% { transform: rotateX(-25deg) rotateY(0); } 100% { transform: rotateX(-25deg) rotateY(360deg); } }
+@keyframes splashIn { from { scale: 0; } to { scale: 1; } }
+@keyframes splashRing { from { transform: rotateX(75deg) rotateZ(0); } to { transform: rotateX(75deg) rotateZ(360deg); } }
+@keyframes splashPulse { 50% { transform: scale(1.2); opacity: .7; } }
+@keyframes splashGrid { to { background-position: 0 48px; } }
+@keyframes splashFloat { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(-100vh); opacity: 0; } }
+@keyframes splashShine { to { background-position: 200% center; } }
+@keyframes splashLoad { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .splash * { animation-duration: .01s !important; animation-iteration-count: 1 !important; } }
