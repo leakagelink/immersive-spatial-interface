@@ -80,7 +80,7 @@ export function csvToProducts(
   const problems: string[] = [];
   if (!raw.length) return { rows: [], problems: ["The file is empty"] };
   const head = headerMap(raw[0]!);
-  if (head.name === undefined) return { rows: [], problems: ["No product-name column found. Use the template file."] };
+  if (head["name"] === undefined) return { rows: [], problems: ["No product-name column found. Use the template file."] };
   const vBy = new Map(s.vendors.map((v) => [norm(v.name), v]));
   const cBy = new Map(s.categories.map((c) => [norm(c.name), c]));
   const rows: Omit<Product, "id">[] = [];

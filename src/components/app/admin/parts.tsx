@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 export const smallBtn = "inline-flex h-9 items-center gap-1.5 rounded-xl px-3 text-xs font-bold";
 
-export function Stat({ l, v, c, hint }: { l: string; v: string | number; c?: string; hint?: string }) {
+export function Stat({ l, v, c, hint }: { l: string; v: string | number; c?: string | undefined; hint?: string | undefined }) {
   return (
     <div className="glass rounded-2xl p-4">
       <div className={cn("font-display text-xl font-bold tabular-nums sm:text-2xl", c)}>{v}</div>
