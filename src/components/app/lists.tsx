@@ -6,6 +6,14 @@ import { currentPrice, profitOf, stockState, useStore, type Product, type Vendor
 import { Avatar3D, Chip, Empty, FilterPills, PrimaryButton, SearchBox, SortSelect, StatusBadge } from "./ui3d";
 import { VendorDialog } from "./forms";
 
+export function PPhoto({ p, className = "h-11 w-11 text-2xl" }: { p: Product; className?: string }) {
+  return p.photo ? (
+    <img src={p.photo} alt="" className={cn("shrink-0 rounded-xl object-cover shadow-3d", className)} />
+  ) : (
+    <span className={cn("grid shrink-0 place-items-center rounded-xl bg-secondary shadow-3d", className)}>{p.emoji}</span>
+  );
+}
+
 export function ProductTable({ products, showCp, showVendor }: { products: Product[]; showCp?: boolean | undefined; showVendor?: boolean }) {
   const vendors = useStore((s) => s.vendors);
   const cols = showCp ? "grid-cols-[minmax(10rem,1.6fr)_repeat(5,4.2rem)_1.5rem]" : "grid-cols-[minmax(10rem,1.6fr)_repeat(4,4.2rem)_1.5rem]";
@@ -26,7 +34,7 @@ export function ProductTable({ products, showCp, showVendor }: { products: Produ
         return (
           <Link key={p.id} to="/products/$productId" params={{ productId: p.id }} className="glass animate-rise block rounded-2xl p-3 active:scale-[.99]" style={{ animationDelay: `${Math.min(i, 12) * 30}ms` }}>
             <div className="flex min-w-0 items-center gap-3">
-              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-secondary text-2xl shadow-3d">{p.emoji}</span>
+              <PPhoto p={p} />
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-sm font-semibold">{p.name}</span>
                 <span className="flex min-w-0 items-center gap-1.5 text-[11px] text-muted-foreground">
@@ -68,7 +76,7 @@ export function ProductTable({ products, showCp, showVendor }: { products: Produ
               style={{ animationDelay: `${Math.min(i, 12) * 30}ms` }}
             >
               <span className="flex min-w-0 items-center gap-3">
-                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-secondary text-2xl shadow-3d">{p.emoji}</span>
+                <PPhoto p={p} />
                 <span className="min-w-0">
                   <span className="block truncate text-sm font-semibold">{p.name}</span>
                   <span className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
