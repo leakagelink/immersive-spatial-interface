@@ -109,11 +109,11 @@ function Home() {
         </div>
       </Tilt>
 
-      <div className="mt-6 grid gap-3 sm:grid-cols-2">
+      <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
         {tiles.map((t, i) => (
-          <Link key={t.to} to={t.to} className={i === 0 ? "sm:col-span-2" : ""}>
+          <Link key={t.to} to={t.to} className={i === 0 ? "min-w-0 sm:col-span-2" : "min-w-0"}>
             <Tilt className="p-4" delay={80 + i * 60}>
-              <div className="flex items-center gap-4">
+              <div className="flex min-w-0 items-center gap-3 sm:gap-4">
                 <Cube3D hue={t.hue}>{t.icon}</Cube3D>
                 <div className="min-w-0 flex-1">
                   <div className="font-display text-lg font-bold">{t.title}</div>

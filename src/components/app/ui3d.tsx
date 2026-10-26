@@ -110,7 +110,7 @@ export function StatusBadge({ status }: { status: "active" | "inactive" }) {
 export function PageHeader({ title, subtitle, back, actions, icon }: { title: string; subtitle?: string | undefined; back?: boolean; actions?: ReactNode; icon?: ReactNode }) {
   const router = useRouter();
   return (
-    <header className="sticky top-0 z-30 -mx-4 mb-5 px-4 pb-3 pt-4 backdrop-blur-xl" style={{ background: "linear-gradient(to bottom, var(--background) 55%, transparent)" }}>
+    <header className="sticky top-0 z-30 -mx-3 mb-5 px-3 sm:-mx-4 sm:px-4 pb-3 pt-4 backdrop-blur-xl" style={{ background: "linear-gradient(to bottom, var(--background) 55%, transparent)" }}>
       <div className="flex items-center gap-3">
         {back && (
           <button
@@ -194,7 +194,7 @@ export function SortSelect<T extends string>({ value, onChange, options }: { val
 
 export function Empty({ title, hint, action }: { title: string; hint?: string; action?: ReactNode }) {
   return (
-    <div className="glass mt-6 flex flex-col items-center rounded-3xl px-6 py-12 text-center">
+    <div className="glass mt-6 flex w-full flex-col items-center rounded-3xl px-6 py-12 text-center">
       <div className="animate-floaty mb-4 text-5xl">📦</div>
       <h3 className="font-display text-lg font-bold">{title}</h3>
       {hint && <p className="mt-1 text-sm text-muted-foreground">{hint}</p>}
