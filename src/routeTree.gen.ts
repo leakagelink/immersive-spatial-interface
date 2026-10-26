@@ -16,7 +16,10 @@ import { Route as UrdRouteImport } from './routes/urd'
 import { Route as CategoriesIndexRouteImport } from './routes/categories.index'
 import { Route as CategoriesCategoryIdRouteImport } from './routes/categories.$categoryId'
 import { Route as ProductsIndexRouteImport } from './routes/products.index'
+import { Route as ProductsProductIdRouteImport } from './routes/products.$productId'
 import { Route as VendorsIndexRouteImport } from './routes/vendors.index'
+import { Route as VendorsVendorIdRouteImport } from './routes/vendors.$vendorId'
+import { Route as VendorsNewRouteImport } from './routes/vendors.new'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -53,9 +56,24 @@ const ProductsIndexRoute = ProductsIndexRouteImport.update({
   path: '/products/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProductsProductIdRoute = ProductsProductIdRouteImport.update({
+  id: '/products/$productId',
+  path: '/products/$productId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VendorsIndexRoute = VendorsIndexRouteImport.update({
   id: '/vendors/',
   path: '/vendors/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VendorsVendorIdRoute = VendorsVendorIdRouteImport.update({
+  id: '/vendors/$vendorId',
+  path: '/vendors/$vendorId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VendorsNewRoute = VendorsNewRouteImport.update({
+  id: '/vendors/new',
+  path: '/vendors/new',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -65,6 +83,9 @@ export interface FileRoutesByFullPath {
   '/gst': typeof GstRoute
   '/urd': typeof UrdRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
+  '/products/$productId': typeof ProductsProductIdRoute
+  '/vendors/$vendorId': typeof VendorsVendorIdRoute
+  '/vendors/new': typeof VendorsNewRoute
   '/categories/': typeof CategoriesIndexRoute
   '/products/': typeof ProductsIndexRoute
   '/vendors/': typeof VendorsIndexRoute
@@ -75,6 +96,9 @@ export interface FileRoutesByTo {
   '/gst': typeof GstRoute
   '/urd': typeof UrdRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
+  '/products/$productId': typeof ProductsProductIdRoute
+  '/vendors/$vendorId': typeof VendorsVendorIdRoute
+  '/vendors/new': typeof VendorsNewRoute
   '/categories': typeof CategoriesIndexRoute
   '/products': typeof ProductsIndexRoute
   '/vendors': typeof VendorsIndexRoute
@@ -86,6 +110,9 @@ export interface FileRoutesById {
   '/gst': typeof GstRoute
   '/urd': typeof UrdRoute
   '/categories/$categoryId': typeof CategoriesCategoryIdRoute
+  '/products/$productId': typeof ProductsProductIdRoute
+  '/vendors/$vendorId': typeof VendorsVendorIdRoute
+  '/vendors/new': typeof VendorsNewRoute
   '/categories/': typeof CategoriesIndexRoute
   '/products/': typeof ProductsIndexRoute
   '/vendors/': typeof VendorsIndexRoute
@@ -98,6 +125,9 @@ export interface FileRouteTypes {
     | '/gst'
     | '/urd'
     | '/categories/$categoryId'
+    | '/products/$productId'
+    | '/vendors/$vendorId'
+    | '/vendors/new'
     | '/categories/'
     | '/products/'
     | '/vendors/'
@@ -108,6 +138,9 @@ export interface FileRouteTypes {
     | '/gst'
     | '/urd'
     | '/categories/$categoryId'
+    | '/products/$productId'
+    | '/vendors/$vendorId'
+    | '/vendors/new'
     | '/categories'
     | '/products'
     | '/vendors'
@@ -118,6 +151,9 @@ export interface FileRouteTypes {
     | '/gst'
     | '/urd'
     | '/categories/$categoryId'
+    | '/products/$productId'
+    | '/vendors/$vendorId'
+    | '/vendors/new'
     | '/categories/'
     | '/products/'
     | '/vendors/'
@@ -129,6 +165,9 @@ export interface RootRouteChildren {
   GstRoute: typeof GstRoute
   UrdRoute: typeof UrdRoute
   CategoriesCategoryIdRoute: typeof CategoriesCategoryIdRoute
+  ProductsProductIdRoute: typeof ProductsProductIdRoute
+  VendorsVendorIdRoute: typeof VendorsVendorIdRoute
+  VendorsNewRoute: typeof VendorsNewRoute
   CategoriesIndexRoute: typeof CategoriesIndexRoute
   ProductsIndexRoute: typeof ProductsIndexRoute
   VendorsIndexRoute: typeof VendorsIndexRoute
@@ -185,11 +224,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/products/$productId': {
+      id: '/products/$productId'
+      path: '/products/$productId'
+      fullPath: '/products/$productId'
+      preLoaderRoute: typeof ProductsProductIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vendors/': {
       id: '/vendors/'
       path: '/vendors'
       fullPath: '/vendors/'
       preLoaderRoute: typeof VendorsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vendors/$vendorId': {
+      id: '/vendors/$vendorId'
+      path: '/vendors/$vendorId'
+      fullPath: '/vendors/$vendorId'
+      preLoaderRoute: typeof VendorsVendorIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vendors/new': {
+      id: '/vendors/new'
+      path: '/vendors/new'
+      fullPath: '/vendors/new'
+      preLoaderRoute: typeof VendorsNewRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -201,6 +261,9 @@ const rootRouteChildren: RootRouteChildren = {
   GstRoute: GstRoute,
   UrdRoute: UrdRoute,
   CategoriesCategoryIdRoute: CategoriesCategoryIdRoute,
+  ProductsProductIdRoute: ProductsProductIdRoute,
+  VendorsVendorIdRoute: VendorsVendorIdRoute,
+  VendorsNewRoute: VendorsNewRoute,
   CategoriesIndexRoute: CategoriesIndexRoute,
   ProductsIndexRoute: ProductsIndexRoute,
   VendorsIndexRoute: VendorsIndexRoute,
