@@ -6,7 +6,7 @@ import { currentPrice, profitOf, stockState, useStore, type Product, type Vendor
 import { Avatar3D, Chip, Empty, FilterPills, PrimaryButton, SearchBox, SortSelect, StatusBadge } from "./ui3d";
 import { VendorDialog } from "./forms";
 
-export function ProductTable({ products, showCp, showVendor }: { products: Product[]; showCp?: boolean; showVendor?: boolean }) {
+export function ProductTable({ products, showCp, showVendor }: { products: Product[]; showCp?: boolean | undefined; showVendor?: boolean }) {
   const vendors = useStore((s) => s.vendors);
   const cols = showCp ? "grid-cols-[minmax(10rem,1.6fr)_repeat(5,4.2rem)_1.5rem]" : "grid-cols-[minmax(10rem,1.6fr)_repeat(4,4.2rem)_1.5rem]";
   return (

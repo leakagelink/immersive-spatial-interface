@@ -3,6 +3,7 @@ import { VendorList } from "@/components/app/lists";
 import { Page, PageHeader } from "@/components/app/ui3d";
 
 export const Route = createFileRoute("/gst")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "GST Billed Suppliers — Rj Store" },

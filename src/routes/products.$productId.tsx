@@ -8,6 +8,7 @@ import { currentPrice, fmt, fmtDate, marginOf, profitOf, sortedHistory, stockSta
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/products/$productId")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Product — Rj Store" },

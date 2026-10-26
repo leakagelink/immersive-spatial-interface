@@ -107,7 +107,7 @@ export function StatusBadge({ status }: { status: "active" | "inactive" }) {
   );
 }
 
-export function PageHeader({ title, subtitle, back, actions, icon }: { title: string; subtitle?: string; back?: boolean; actions?: ReactNode; icon?: ReactNode }) {
+export function PageHeader({ title, subtitle, back, actions, icon }: { title: string; subtitle?: string | undefined; back?: boolean; actions?: ReactNode; icon?: ReactNode }) {
   const router = useRouter();
   return (
     <header className="sticky top-0 z-30 -mx-4 mb-5 px-4 pb-3 pt-4 backdrop-blur-xl" style={{ background: "linear-gradient(to bottom, var(--background) 55%, transparent)" }}>

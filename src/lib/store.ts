@@ -29,8 +29,8 @@ export interface PriceEntry {
   cost: number;
   gst: number;
   sp: number;
-  cp?: number; // discounted purchase price (DM)
-  bill?: string;
+  cp?: number | undefined; // discounted purchase price (DM)
+  bill?: string | undefined;
 }
 
 export interface Product {

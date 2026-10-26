@@ -53,7 +53,7 @@ export function VendorTypePicker({ value, onChange }: { value: VendorType; onCha
 export interface PriceDraft { cost: string; gst: string; sp: string; cp: string; date: string; bill: string }
 export const emptyPrice = (): PriceDraft => ({ cost: "", gst: "5", sp: "", cp: "", date: today(), bill: "" });
 
-export function PriceFields({ d, set, showCp }: { d: PriceDraft; set: (d: PriceDraft) => void; showCp?: boolean }) {
+export function PriceFields({ d, set, showCp }: { d: PriceDraft; set: (d: PriceDraft) => void; showCp?: boolean | undefined }) {
   const p = profitOf({ cost: +d.cost || 0, sp: +d.sp || 0, cp: d.cp ? +d.cp : undefined });
   return (
     <div className="grid grid-cols-2 gap-3">
@@ -97,15 +97,15 @@ export function PriceFields({ d, set, showCp }: { d: PriceDraft; set: (d: PriceD
 
 export function validatePrice(d: PriceDraft): Omit<PriceEntry, "id"> | null {
   const cost = parseFloat(d.cost), sp = parseFloat(d.sp), gst = parseFloat(d.gst);
-  if (!(cost >= 0) || d.cost === "") return toast.error("Enter a valid cost price"), null;
-  if (!(sp >= 0) || d.sp === "") return toast.error("Enter a valid selling price"), null;
-  if (!d.date) return toast.error("Pick a price date"), null;
+  if (!(cost >= 0) || d.cost === "") { toast.error("Enter a valid cost price"); return null; }
+  if (!(sp >= 0) || d.sp === "") { toast.error("Enter a valid selling price"); return null; }
+  if (!d.date) { toast.error("Pick a price date"); return null; }
   const cp = d.cp ? parseFloat(d.cp) : undefined;
   return { cost, sp, gst: gst || 0, cp: cp && cp > 0 ? cp : undefined, date: d.date, bill: d.bill.trim() || undefined };
 }
 
 // ---------------- Product dialog ----------------
-export function ProductDialog({ open, onOpenChange, vendorId, product }: { open: boolean; onOpenChange: (o: boolean) => void; vendorId?: string; product?: Product }) {
+export function ProductDialog({ open, onOpenChange, vendorId, product }: { open: boolean; onOpenChange: (o: boolean) => void; vendorId?: string | undefined; product?: Product }) {
   const { vendors, categories, addProduct, updateProduct } = useStore();
   const [name, setName] = useState("");
   const [emoji, setEmoji] = useState("📦");
@@ -131,8 +131,8 @@ export function ProductDialog({ open, onOpenChange, vendorId, product }: { open:
   const vType = vendors.find((v) => v.id === ven)?.type;
 
   const save = () => {
-    if (!name.trim()) return toast.error("Product name is required");
-    if (!ven) return toast.error("Choose a vendor");
+    if (!name.trim()) { toast.error("Product name is required"); return; }
+    if (!ven) { toast.error("Choose a vendor"); return; }
     const base = { name: name.trim(), emoji, categoryId: cat, vendorId: ven, unit, stock: Math.max(0, +stock || 0), lowStockAt: Math.max(0, +low || 0) };
     if (product) {
       updateProduct(product.id, base);
@@ -235,7 +235,7 @@ export function VendorDialog({ open, onOpenChange, vendor, defaultType = "GST", 
     setF(vendor ? { name: vendor.name, type: vendor.type, status: vendor.status, phone: vendor.phone, gstin: vendor.gstin, address: vendor.address, notes: vendor.notes } : { name: "", type: defaultType, status: "active", phone: "", gstin: "", address: "", notes: "" });
   }, [open, vendor, defaultType]);
   const save = () => {
-    if (!f.name.trim()) return toast.error("Vendor name is required");
+    if (!f.name.trim()) { toast.error("Vendor name is required"); return; }
     if (vendor) {
       updateVendor(vendor.id, { ...f, name: f.name.trim() });
       toast.success("Vendor updated");

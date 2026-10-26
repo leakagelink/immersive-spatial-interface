@@ -9,6 +9,7 @@ import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/categories/")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Categories — Rj Store" },
@@ -28,7 +29,7 @@ function Categories() {
   const [icon, setIcon] = useState("📦");
   const list = categories.filter((c) => c.name.toLowerCase().includes(q.trim().toLowerCase()));
   const save = () => {
-    if (!name.trim()) return toast.error("Category name is required");
+    if (!name.trim()) { toast.error("Category name is required"); return; }
     addCategory({ name: name.trim(), icon, hue: Math.floor(Math.random() * 360) });
     toast.success("Category added");
     setName(""); setIcon("📦"); setOpen(false);

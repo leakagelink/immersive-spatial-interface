@@ -7,6 +7,7 @@ import { Empty, Page, PageHeader, PrimaryButton } from "@/components/app/ui3d";
 import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/products/")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "All Products — Rj Store" },

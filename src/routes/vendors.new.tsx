@@ -8,6 +8,7 @@ import { uid, useStore, type VendorType } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/vendors/new")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Add Vendor & Product — Rj Store" },
@@ -39,9 +40,9 @@ function AddVendorProduct() {
   const save = (another: boolean) => {
     let vid = savedVendorId ?? (mode === "existing" ? existingId : "");
     if (!vid) {
-      if (!vf.name.trim()) return toast.error("Vendor name is required");
+      if (!vf.name.trim()) { toast.error("Vendor name is required"); return; }
     }
-    if (!pname.trim()) return toast.error("Product name is required");
+    if (!pname.trim()) { toast.error("Product name is required"); return; }
     const pe = validatePrice(price);
     if (!pe) return;
     if (!vid) {

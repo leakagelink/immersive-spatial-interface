@@ -10,8 +10,6 @@ export const getRouter = () => {
     context: { queryClient },
     scrollRestoration: true,
     defaultPreloadStaleTime: 0,
-    // Store data lives in the browser (localStorage); render pages client-side to avoid hydration mismatches.
-    defaultSsr: false,
   });
 
   return router;

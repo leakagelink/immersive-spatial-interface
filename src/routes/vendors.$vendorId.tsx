@@ -9,6 +9,7 @@ import { currentPrice, fmt, fmtDate, profitOf, useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/vendors/$vendorId")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Vendor — Rj Store" },

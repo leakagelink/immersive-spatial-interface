@@ -8,6 +8,7 @@ import { Cube3D, Empty, GhostButton, Page, PageHeader, PrimaryButton } from "@/c
 import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/categories/$categoryId")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Category products — Rj Store" },

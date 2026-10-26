@@ -6,6 +6,7 @@ import { Cube3D, Page, Tilt } from "@/components/app/ui3d";
 import { currentPrice, fmt, fmtDate, profitOf, stockState, useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Rj Store — Dashboard" },
