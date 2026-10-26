@@ -10,33 +10,128 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DmRouteImport } from './routes/dm'
+import { Route as GstRouteImport } from './routes/gst'
+import { Route as UrdRouteImport } from './routes/urd'
+import { Route as CategoriesIndexRouteImport } from './routes/categories.index'
+import { Route as CategoriesCategoryIdRouteImport } from './routes/categories.$categoryId'
+import { Route as ProductsIndexRouteImport } from './routes/products.index'
+import { Route as VendorsIndexRouteImport } from './routes/vendors.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DmRoute = DmRouteImport.update({
+  id: '/dm',
+  path: '/dm',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GstRoute = GstRouteImport.update({
+  id: '/gst',
+  path: '/gst',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UrdRoute = UrdRouteImport.update({
+  id: '/urd',
+  path: '/urd',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CategoriesIndexRoute = CategoriesIndexRouteImport.update({
+  id: '/categories/',
+  path: '/categories/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CategoriesCategoryIdRoute = CategoriesCategoryIdRouteImport.update({
+  id: '/categories/$categoryId',
+  path: '/categories/$categoryId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductsIndexRoute = ProductsIndexRouteImport.update({
+  id: '/products/',
+  path: '/products/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VendorsIndexRoute = VendorsIndexRouteImport.update({
+  id: '/vendors/',
+  path: '/vendors/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dm': typeof DmRoute
+  '/gst': typeof GstRoute
+  '/urd': typeof UrdRoute
+  '/categories/$categoryId': typeof CategoriesCategoryIdRoute
+  '/categories/': typeof CategoriesIndexRoute
+  '/products/': typeof ProductsIndexRoute
+  '/vendors/': typeof VendorsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dm': typeof DmRoute
+  '/gst': typeof GstRoute
+  '/urd': typeof UrdRoute
+  '/categories/$categoryId': typeof CategoriesCategoryIdRoute
+  '/categories': typeof CategoriesIndexRoute
+  '/products': typeof ProductsIndexRoute
+  '/vendors': typeof VendorsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/dm': typeof DmRoute
+  '/gst': typeof GstRoute
+  '/urd': typeof UrdRoute
+  '/categories/$categoryId': typeof CategoriesCategoryIdRoute
+  '/categories/': typeof CategoriesIndexRoute
+  '/products/': typeof ProductsIndexRoute
+  '/vendors/': typeof VendorsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/dm'
+    | '/gst'
+    | '/urd'
+    | '/categories/$categoryId'
+    | '/categories/'
+    | '/products/'
+    | '/vendors/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/dm'
+    | '/gst'
+    | '/urd'
+    | '/categories/$categoryId'
+    | '/categories'
+    | '/products'
+    | '/vendors'
+  id:
+    | '__root__'
+    | '/'
+    | '/dm'
+    | '/gst'
+    | '/urd'
+    | '/categories/$categoryId'
+    | '/categories/'
+    | '/products/'
+    | '/vendors/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DmRoute: typeof DmRoute
+  GstRoute: typeof GstRoute
+  UrdRoute: typeof UrdRoute
+  CategoriesCategoryIdRoute: typeof CategoriesCategoryIdRoute
+  CategoriesIndexRoute: typeof CategoriesIndexRoute
+  ProductsIndexRoute: typeof ProductsIndexRoute
+  VendorsIndexRoute: typeof VendorsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +143,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dm': {
+      id: '/dm'
+      path: '/dm'
+      fullPath: '/dm'
+      preLoaderRoute: typeof DmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gst': {
+      id: '/gst'
+      path: '/gst'
+      fullPath: '/gst'
+      preLoaderRoute: typeof GstRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/urd': {
+      id: '/urd'
+      path: '/urd'
+      fullPath: '/urd'
+      preLoaderRoute: typeof UrdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/categories/': {
+      id: '/categories/'
+      path: '/categories'
+      fullPath: '/categories/'
+      preLoaderRoute: typeof CategoriesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/categories/$categoryId': {
+      id: '/categories/$categoryId'
+      path: '/categories/$categoryId'
+      fullPath: '/categories/$categoryId'
+      preLoaderRoute: typeof CategoriesCategoryIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/products/': {
+      id: '/products/'
+      path: '/products'
+      fullPath: '/products/'
+      preLoaderRoute: typeof ProductsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vendors/': {
+      id: '/vendors/'
+      path: '/vendors'
+      fullPath: '/vendors/'
+      preLoaderRoute: typeof VendorsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DmRoute: DmRoute,
+  GstRoute: GstRoute,
+  UrdRoute: UrdRoute,
+  CategoriesCategoryIdRoute: CategoriesCategoryIdRoute,
+  CategoriesIndexRoute: CategoriesIndexRoute,
+  ProductsIndexRoute: ProductsIndexRoute,
+  VendorsIndexRoute: VendorsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
