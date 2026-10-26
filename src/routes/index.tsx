@@ -76,8 +76,8 @@ function Home() {
 
   return (
     <Page>
-      <Tilt className="mt-5 p-6" max={6}>
-        <div className="flex items-center gap-5">
+      <Tilt className="mt-5 p-4 sm:p-6" max={6}>
+        <div className="flex items-center gap-3 sm:gap-5">
           <div className="min-w-0 flex-1">
             <p className="text-xs font-bold uppercase tracking-[0.25em] text-primary">Store Manager</p>
             <button
@@ -87,7 +87,7 @@ function Home() {
                 if (n?.trim()) setStoreName(n.trim());
               }}
             >
-              <h1 className="font-display text-4xl font-extrabold sm:text-5xl">{storeName}</h1>
+              <h1 className="font-display break-words text-3xl font-extrabold sm:text-5xl">{storeName}</h1>
               <Pencil className="h-4 w-4 text-muted-foreground opacity-0 transition group-hover:opacity-100" />
             </button>
             <p className="mt-1 text-sm text-muted-foreground">Manage Products & Suppliers</p>
