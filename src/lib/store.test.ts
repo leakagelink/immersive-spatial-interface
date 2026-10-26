@@ -163,7 +163,11 @@ describe("data check", () => {
     ...over,
   });
   it("flags missing vendor, selling below cost, and duplicate names", () => {
-    const r = dataCheck([p({ id: "a" }), p({ id: "b", name: "lays" }), p({ id: "c", vendorId: "gone" }), p({ id: "d", history: [{ id: "h", date: "2026-10-25", cost: 50, gst: 5, sp: 40 }] })], vendors, categories);
+    const r = dataCheck(
+      [p({ id: "a" }), p({ id: "b", name: "lays" }), p({ id: "c", vendorId: "gone" }), p({ id: "d", name: "Maggi", history: [{ id: "h", date: "2026-10-25", cost: 50, gst: 5, sp: 40 }] })],
+      vendors,
+      categories,
+    );
     expect(r.noVendor.map((x) => x.id)).toEqual(["c"]);
     expect(r.loss.map((x) => x.id)).toEqual(["d"]);
     expect(r.dupes[0]!.items.map((x) => x.id)).toEqual(["a", "b"]);
@@ -187,18 +191,34 @@ describe("GST report", () => {
 });
 
 describe("csv import", () => {
+  const s = {
+    vendors: [{ id: "v1", name: "Om Shiv Marketing", type: "GST", status: "active", phone: "", gstin: "", address: "", notes: "", createdAt: "2026-01-01" } as Vendor],
+    categories: [] as Category[],
+    settings: { defaultGst: 5, lowStockAt: 5, profitBase: "cp" as const },
+  };
+  it("reads quoted cells and keeps commas inside them", () => {
+    expect(parseCsv('Product,Notes\n"Nutella, 1kg","bill ""12"""\n')).toEqual([
+      ["Product", "Notes"],
+      ["Nutella, 1kg", 'bill "12"'],
+    ]);
+  });
   it("maps header columns to products and reports unknown vendors", () => {
-    const out = csvToProductsCheck(
+    const out = csvToProducts(
       [
         ["Product", "Vendor", "Category", "Stock", "Cost", "GST %", "SP"],
         ["Nutella Spread", "Om Shiv Marketing", "Chocolates", "24", "180", "5", "200"],
         ["Ghost Item", "Nobody Ltd", "", "", "", "", ""],
       ],
-      { vendors: [{ id: "v1", name: "Om Shiv Marketing", type: "GST", status: "active", phone: "", gstin: "", address: "", notes: "", createdAt: "2026-01-01" }], categories: [], settings: { defaultGst: 5, lowStockAt: 5, profitBase: "cp" } },
+      s,
     );
     expect(out.rows[0]).toMatchObject({ name: "Nutella Spread", vendorId: "v1", stock: 24 });
     expect(out.rows[0]!.history[0]).toMatchObject({ cost: 180, sp: 200 });
     expect(out.rows[1]!.vendorId).toBe("");
+    expect(out.rows[1]!.lowStockAt).toBe(5);
     expect(out.problems.some((x) => x.includes("Nobody Ltd"))).toBe(true);
+    expect(out.problems.some((x) => x.includes("no cost"))).toBe(true);
+  });
+  it("refuses a file with no product-name column", () => {
+    expect(csvToProducts([["A", "B"], ["1", "2"]], s).problems[0]).toContain("product-name");
   });
 });
