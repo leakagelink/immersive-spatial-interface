@@ -1,7 +1,7 @@
 {
   "appId": "com.rjstore.app",
   "appName": "Rj Store",
-  "webDir": "public",
+  "webDir": "capacitor-www",
   "server": {
     "url": "https://id-preview--66e5595c-7d59-4fe2-a98d-7f4900348a0c.lovable.app",
     "cleartext": false
