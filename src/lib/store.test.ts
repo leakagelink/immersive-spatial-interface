@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
+import { csvToProducts, parseCsv } from "./csv";
 import {
   applyBulkPrice,
   billDue,
   billStatus,
-  csvToProductsCheck,
   dataCheck,
   entryProfit,
   gstReport,
