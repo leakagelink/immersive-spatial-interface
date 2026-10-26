@@ -133,7 +133,7 @@ export function PageHeader({ title, subtitle, back, actions, icon }: { title: st
 }
 
 export function Page({ children }: { children: ReactNode }) {
-  return <main className="mx-auto min-h-screen w-full max-w-4xl px-4 pb-36">{children}</main>;
+  return <main className="mx-auto min-h-screen w-full max-w-4xl px-3 pb-36 sm:px-4">{children}</main>;
 }
 
 export function SearchBox({ value, onChange, placeholder }: { value: string; onChange: (v: string) => void; placeholder: string }) {

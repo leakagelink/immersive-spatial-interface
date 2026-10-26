@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ChevronRight, Plus } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { currentPrice, profitOf, stockState, useStore, type Product, type VendorType } from "@/lib/store";
 import { Avatar3D, Chip, Empty, FilterPills, PrimaryButton, SearchBox, SortSelect, StatusBadge } from "./ui3d";
@@ -16,11 +16,11 @@ export function ProductTable({ products, showCp, showVendor }: { products: Produ
         const c = currentPrice(p);
         const pr = profitOf(c);
         const st = stockState(p);
-        const cells: [string, React.ReactNode][] = [
+        const cells: [string, ReactNode][] = [
           ["Cost", <Chip key="c" kind="cost" value={c.cost} className="w-full min-w-0" />],
           ["GST", <Chip key="g" kind="gst" value={c.gst} pct className="w-full min-w-0" />],
           ["SP", <Chip key="s" kind="sp" value={c.sp} className="w-full min-w-0" />],
-          ...(showCp ? [["CP", <Chip key="cp" kind="cp" value={c.cp ?? c.cost} className="w-full min-w-0" />] as [string, React.ReactNode]] : []),
+          ...(showCp ? [["CP", <Chip key="cp" kind="cp" value={c.cp ?? c.cost} className="w-full min-w-0" />] as [string, ReactNode]] : []),
           ["Profit", <Chip key="p" kind={pr >= 0 ? "profit" : "loss"} value={pr} className="w-full min-w-0" />],
         ];
         return (
