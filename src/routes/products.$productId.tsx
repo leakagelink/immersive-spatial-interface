@@ -113,47 +113,62 @@ function ProductPage() {
               </div>
             ))}
           </div>
-          <div className="-mx-4 overflow-x-auto px-4">
-            <div className="min-w-[34rem] space-y-2">
-              <div className="grid grid-cols-[6.5rem_repeat(4,1fr)_5rem_2rem] gap-2 px-3 text-[11px] font-bold uppercase text-muted-foreground">
+          <div className="space-y-2">
+              <div className="hidden grid-cols-[6.5rem_repeat(4,1fr)_5rem_2rem] gap-2 px-3 text-[11px] font-bold uppercase text-muted-foreground sm:grid">
                 <span>Date</span><span>Cost ₹</span><span>GST</span><span>SP ₹</span><span>Profit ₹</span><span>Change</span><span />
               </div>
               {hist.map((h, i) => {
                 const prev = hist[i + 1];
                 const diff = prev ? h.cost - prev.cost : 0;
+                const change = (
+                  <span className="flex items-center gap-1">
+                    {i === 0 && <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold text-primary-foreground">Current</span>}
+                    {prev && (
+                      <span className={cn("flex items-center gap-0.5 text-xs font-bold", diff > 0 ? "text-destructive" : diff < 0 ? "text-sp" : "text-muted-foreground")}>
+                        {diff > 0 ? <TrendingUp className="h-3 w-3" /> : diff < 0 ? <TrendingDown className="h-3 w-3" /> : <Minus className="h-3 w-3" />}
+                        {diff > 0 ? "+" : ""}{fmt(diff)}
+                      </span>
+                    )}
+                  </span>
+                );
+                const del = (
+                  <button
+                    aria-label="Delete entry"
+                    disabled={hist.length <= 1}
+                    onClick={() => confirm("Delete this price entry?") && deletePrice(p.id, h.id)}
+                    className="grid h-8 w-8 place-items-center text-muted-foreground hover:text-destructive disabled:opacity-20"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                );
                 return (
-                  <div key={h.id} className={cn("glass grid grid-cols-[6.5rem_repeat(4,1fr)_5rem_2rem] items-center gap-2 rounded-2xl px-3 py-3 text-sm tabular-nums", i === 0 && "ring-2 ring-primary/60")}>
-                    <span className="font-semibold">{fmtDate(h.date)}</span>
-                    <span>{fmt(h.cost)}</span>
-                    <span>{h.gst}%</span>
-                    <span>{fmt(h.sp)}</span>
-                    <span className="text-profit">{fmt(profitOf(h))}</span>
-                    <span>
-                      {i === 0 ? (
-                        <span className="rounded-full bg-primary px-2 py-0.5 text-[10px] font-bold text-primary-foreground">Current</span>
-                      ) : null}
-                      {i !== 0 && prev && (
-                        <span className={cn("flex items-center gap-0.5 text-xs font-bold", diff > 0 ? "text-destructive" : diff < 0 ? "text-sp" : "text-muted-foreground")}>
-                          {diff > 0 ? <TrendingUp className="h-3 w-3" /> : diff < 0 ? <TrendingDown className="h-3 w-3" /> : <Minus className="h-3 w-3" />}
-                          {diff > 0 ? "+" : ""}{fmt(diff)}
-                        </span>
-                      )}
-                      {i === 0 && prev && (
-                        <span className={cn("ml-1 text-[10px] font-bold", diff > 0 ? "text-destructive" : "text-sp")}>{diff > 0 ? "+" : ""}{fmt(diff)}</span>
-                      )}
-                    </span>
-                    <button
-                      aria-label="Delete entry"
-                      disabled={hist.length <= 1}
-                      onClick={() => confirm("Delete this price entry?") && deletePrice(p.id, h.id)}
-                      className="text-muted-foreground hover:text-destructive disabled:opacity-20"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
+                  <div key={h.id} className={cn("glass rounded-2xl px-3 py-3 text-sm tabular-nums", i === 0 && "ring-2 ring-primary/60")}>
+                    <div className="sm:hidden">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-semibold">{fmtDate(h.date)}</span>
+                        <div className="flex items-center gap-1">{change}{del}</div>
+                      </div>
+                      <div className="mt-2 grid grid-cols-4 gap-2 text-center">
+                        {[["Cost", fmt(h.cost), ""], ["GST", `${h.gst}%`, ""], ["SP", fmt(h.sp), ""], ["Profit", fmt(profitOf(h)), "text-profit"]].map(([l, val, c]) => (
+                          <div key={l} className="min-w-0 rounded-xl bg-background/40 py-1.5">
+                            <div className="text-[10px] font-bold uppercase text-muted-foreground">{l}</div>
+                            <div className={cn("truncate font-semibold", c)}>{val}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="hidden grid-cols-[6.5rem_repeat(4,1fr)_5rem_2rem] items-center gap-2 sm:grid">
+                      <span className="font-semibold">{fmtDate(h.date)}</span>
+                      <span>{fmt(h.cost)}</span>
+                      <span>{h.gst}%</span>
+                      <span>{fmt(h.sp)}</span>
+                      <span className="text-profit">{fmt(profitOf(h))}</span>
+                      {change}
+                      {del}
+                    </div>
                   </div>
                 );
               })}
-            </div>
           </div>
         </section>
       )}

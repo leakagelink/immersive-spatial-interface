@@ -113,7 +113,7 @@ export function useProductFilters(list: Product[]) {
   const controls = (
     <div className="mb-4 space-y-3">
       <SearchBox value={q} onChange={setQ} placeholder="Search products…" />
-      <div className="flex items-center gap-2">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
         <div className="min-w-0 flex-1">
           <FilterPills
             value={stock}
@@ -153,7 +153,7 @@ export function VendorList({ type }: { type?: VendorType }) {
           <Plus className="h-4 w-4" /> <span className="hidden sm:inline">Add {type === "URD" ? "URD" : "Vendor"}</span>
         </PrimaryButton>
       </div>
-      <div className="mb-4 flex items-center gap-2">
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center">
         <div className="min-w-0 flex-1">
           <FilterPills value={st} onChange={setSt} options={[{ value: "all", label: "All", count: base.length }, { value: "active", label: "Active" }, { value: "inactive", label: "Inactive" }]} />
         </div>
