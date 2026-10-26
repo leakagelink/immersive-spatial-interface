@@ -74,6 +74,18 @@ export function stockState(p: Product): "in" | "low" | "out" {
 
 export const today = () => new Date().toISOString().slice(0, 10);
 
+export type BulkMode = "pct" | "amt";
+export type BulkField = "cost" | "sp" | "both";
+/** New price entry after a bulk change: % or ₹ added (negative = decrease), never below 0, rounded to paise. */
+export function applyBulkPrice(e: PriceEntry, field: BulkField, mode: BulkMode, value: number, date: string): Omit<PriceEntry, "id"> {
+  const ch = (n: number) => Math.max(0, Math.round((mode === "pct" ? n * (1 + value / 100) : n + value) * 100) / 100);
+  return {
+    date, gst: e.gst, cp: e.cp,
+    cost: field === "sp" ? e.cost : ch(e.cost),
+    sp: field === "cost" ? e.sp : ch(e.sp),
+  };
+}
+
 // ---------- seed ----------
 const C = (id: string, name: string, icon: string, hue: number): Category => ({ id, name, icon, hue });
 const seedCategories: Category[] = [
