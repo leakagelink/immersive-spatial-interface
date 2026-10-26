@@ -1,10 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { CalendarDays, Minus, Pencil, Plus, Trash2, TrendingDown, TrendingUp } from "lucide-react";
-import { useState } from "react";
+import { ArrowDownLeft, ArrowUpRight, CalendarDays, Minus, Pencil, Plus, Trash2, TrendingDown, TrendingUp } from "lucide-react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { PriceDialog, ProductDialog } from "@/components/app/forms";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Field, inputCls, PriceDialog, ProductDialog } from "@/components/app/forms";
 import { Chip, Empty, GhostButton, Page, PageHeader, PrimaryButton, Tilt } from "@/components/app/ui3d";
-import { currentPrice, fmt, fmtDate, marginOf, profitOf, sortedHistory, stockState, useStore } from "@/lib/store";
+import { currentPrice, fmt, fmtDate, marginOf, profitOf, sortedHistory, stockState, today, useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/products/$productId")({
@@ -23,11 +24,12 @@ export const Route = createFileRoute("/products/$productId")({
 function ProductPage() {
   const { productId } = Route.useParams();
   const nav = useNavigate();
-  const { products, vendors, categories, deleteProduct, deletePrice, updateProduct } = useStore();
+  const { products, vendors, categories, deleteProduct, deletePrice, updateProduct, entries, addStockEntry, deleteStockEntry } = useStore();
   const p = products.find((x) => x.id === productId);
   const [tab, setTab] = useState<"history" | "details" | "bills">("history");
   const [priceOpen, setPriceOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+  const [stockAsk, setStockAsk] = useState<"in" | "out" | undefined>();
   if (!p) return <Page><PageHeader title="Not found" back /><Empty title="This product doesn't exist" /></Page>;
   const v = vendors.find((x) => x.id === p.vendorId);
   const cat = categories.find((c) => c.id === p.categoryId);
@@ -37,6 +39,7 @@ function ProductPage() {
   const bills = hist.filter((h) => h.bill);
   const st = stockState(p);
   const maxSp = Math.max(...hist.map((h) => h.sp), 1);
+  const mine = entries.filter((e) => e.productId === p.id).sort((a, b) => (a.date < b.date ? 1 : -1));
 
   return (
     <Page>
@@ -45,7 +48,11 @@ function ProductPage() {
       <Tilt className="p-5" max={6}>
         <div className="flex items-center gap-5">
           <div className="perspective">
-            <div className="animate-floaty grid h-24 w-24 place-items-center rounded-3xl bg-secondary text-6xl shadow-3d">{p.emoji}</div>
+            {p.photo ? (
+              <img src={p.photo} alt="" className="animate-floaty h-24 w-24 rounded-3xl object-cover shadow-3d" />
+            ) : (
+              <div className="animate-floaty grid h-24 w-24 place-items-center rounded-3xl bg-secondary text-6xl shadow-3d">{p.emoji}</div>
+            )}
           </div>
           <div className="min-w-0 flex-1">
             <h2 className="truncate font-display text-2xl font-bold">{p.name}</h2>
@@ -194,6 +201,22 @@ function ProductPage() {
                 <PrimaryButton className="h-12 w-12 px-0" aria-label="Increase stock" onClick={() => updateProduct(p.id, { stock: p.stock + 1 })}><Plus className="h-5 w-5" /></PrimaryButton>
               </div>
             </div>
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              <GhostButton onClick={() => setStockAsk("in")}><ArrowDownLeft className="h-4 w-4 text-profit" /> Stock aaya</GhostButton>
+              <GhostButton onClick={() => setStockAsk("out")}><ArrowUpRight className="h-4 w-4 text-sp" /> Stock gaya</GhostButton>
+            </div>
+            {mine.length > 0 && (
+              <div className="mt-4 space-y-2">
+                <div className="text-xs font-bold uppercase text-muted-foreground">Recent entries</div>
+                {mine.slice(0, 5).map((e) => (
+                  <div key={e.id} className="flex items-center gap-3 rounded-2xl bg-background/40 px-3 py-2 text-sm">
+                    <span className={cn("shrink-0 font-bold tabular-nums", e.kind === "in" ? "text-profit" : "text-sp")}>{e.kind === "in" ? "+" : "−"}{e.qty}</span>
+                    <span className="min-w-0 flex-1 truncate text-xs text-muted-foreground">{fmtDate(e.date)}{e.note ? ` · ${e.note}` : ""}</span>
+                    <button aria-label="Delete entry" onClick={() => deleteStockEntry(e.id)} className="shrink-0 text-muted-foreground hover:text-destructive"><Trash2 className="h-4 w-4" /></button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           <GhostButton
             className="w-full text-destructive"
@@ -234,7 +257,59 @@ function ProductPage() {
 
       <PriceDialog open={priceOpen} onOpenChange={setPriceOpen} product={p} isDM={isDM} />
       <ProductDialog open={editOpen} onOpenChange={setEditOpen} product={p} />
+      <QuickStockDialog kind={stockAsk} onOpenChange={(o) => !o && setStockAsk(undefined)} productId={p.id} unit={p.unit} />
     </Page>
+  );
+}
+
+function QuickStockDialog({ kind, onOpenChange, productId, unit }: { kind: "in" | "out" | undefined; onOpenChange: (o: boolean) => void; productId: string; unit: string }) {
+  const addStockEntry = useStore((s) => s.addStockEntry);
+  const [qty, setQty] = useState("");
+  const [note, setNote] = useState("");
+  const [date, setDate] = useState(today());
+  useEffect(() => {
+    if (kind) {
+      setQty("");
+      setNote("");
+      setDate(today());
+    }
+  }, [kind]);
+  return (
+    <Dialog open={!!kind} onOpenChange={onOpenChange}>
+      <DialogContent className="rounded-3xl border-border bg-popover">
+        <DialogHeader>
+          <DialogTitle className="font-display">{kind === "in" ? "Stock aaya" : "Stock gaya"}</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <Field label={`Quantity (${unit})`} required>
+              <input className={inputCls} type="number" min="1" inputMode="numeric" value={qty} onChange={(e) => setQty(e.target.value)} autoFocus />
+            </Field>
+            <Field label="Date" required>
+              <input className={inputCls} type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+            </Field>
+          </div>
+          <Field label="Note">
+            <input className={inputCls} value={note} onChange={(e) => setNote(e.target.value)} placeholder="Bill no., customer…" />
+          </Field>
+          <PrimaryButton
+            className="w-full"
+            onClick={() => {
+              const n = Number(qty);
+              if (!qty || !Number.isFinite(n) || n <= 0) {
+                toast.error("Enter a quantity");
+                return;
+              }
+              addStockEntry(productId, { kind: kind!, qty: Math.floor(n), date: date || today(), note });
+              toast.success(kind === "in" ? `Stock in: +${Math.floor(n)}` : `Stock out: −${Math.floor(n)}`);
+              onOpenChange(false);
+            }}
+          >
+            Save entry
+          </PrimaryButton>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
