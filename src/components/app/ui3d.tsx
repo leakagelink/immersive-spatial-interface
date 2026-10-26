@@ -21,7 +21,7 @@ export function Tilt({ children, className, max = 10, delay = 0 }: { children: R
     if (ref.current) ref.current.style.transform = "";
   };
   return (
-    <div className="perspective animate-rise" style={{ animationDelay: `${delay}ms` }}>
+    <div className="perspective animate-rise min-w-0" style={{ animationDelay: `${delay}ms` }}>
       <div
         ref={ref}
         onPointerMove={onMove}
@@ -180,7 +180,7 @@ export function SortSelect<T extends string>({ value, onChange, options }: { val
     <select
       value={value}
       onChange={(e) => onChange(e.target.value as T)}
-      className="glass h-10 shrink-0 rounded-full px-3 text-sm font-semibold text-foreground outline-none"
+      className="glass h-10 shrink-0 self-start rounded-full px-3 sm:self-auto text-sm font-semibold text-foreground outline-none"
       aria-label="Sort"
     >
       {options.map((o) => (
