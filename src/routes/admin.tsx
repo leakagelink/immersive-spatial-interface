@@ -411,7 +411,7 @@ function SettingsAdmin() {
       <section className="glass space-y-3 rounded-3xl p-5">
         <h3 className="font-display font-bold">Store details</h3>
         <Field label="Store name"><input className={inputCls} value={n} onChange={(e) => setN(e.target.value)} /></Field>
-        <PrimaryButton onClick={() => { if (!n.trim()) return toast.error("Name required"); setStoreName(n.trim()); toast.success("Saved"); }}>Save</PrimaryButton>
+        <PrimaryButton onClick={() => { if (!n.trim()) { toast.error("Name required"); return; } setStoreName(n.trim()); toast.success("Saved"); }}>Save</PrimaryButton>
       </section>
       <section className="glass space-y-3 rounded-3xl p-5">
         <h3 className="font-display font-bold">Backup & export</h3>
