@@ -3,10 +3,10 @@ import { Check, Pencil, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Field, GST_RATES, inputCls } from "../forms";
-import { Empty, FilterPills, GhostButton, PrimaryButton, SearchBox } from "../ui3d";
+import { Empty, FilterPills, PrimaryButton, SearchBox } from "../ui3d";
 import { cn } from "@/lib/utils";
 import { billDue, billStatus, fmt, fmtDate, gstSplit, today, useStore, type Bill, type VendorType } from "@/lib/store";
-import { Pill, Row, Section, Stat, smallBtn, useSelection } from "./parts";
+import { BulkBar, Pill, Row, Section, Stat, smallBtn, useSelection } from "./parts";
 
 const tone = { paid: "good", partial: "warn", unpaid: "bad" } as const;
 
@@ -339,15 +339,3 @@ export function BillsAdmin() {
   );
 }
 
-function BulkBar({ count, onClear, children }: { count: number; onClear: () => void; children: React.ReactNode }) {
-  if (!count) return null;
-  return (
-    <div className="glass sticky top-24 z-20 mb-3 flex flex-wrap items-center gap-2 rounded-2xl p-2 ring-1 ring-primary/40">
-      <span className="px-2 text-sm font-bold">{count} selected</span>
-      <button onClick={onClear} className="text-xs text-muted-foreground underline">
-        Clear
-      </button>
-      <div className="ml-auto flex flex-wrap gap-2">{children}</div>
-    </div>
-  );
-}
