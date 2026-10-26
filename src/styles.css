@@ -129,6 +129,11 @@
       radial-gradient(40rem 30rem at 50% 120%, color-mix(in oklab, var(--accent) 14%, transparent), transparent 60%);
     background-attachment: fixed;
     min-height: 100vh;
+    overflow-x: clip;
+    -webkit-tap-highlight-color: transparent;
+  }
+  html { overflow-x: clip; }
+  input, select, textarea { font-size: max(16px, 1em);
   }
   h1, h2, h3, .font-display { font-family: var(--font-display); letter-spacing: -0.02em; }
 }

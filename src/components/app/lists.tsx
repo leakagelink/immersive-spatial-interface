@@ -10,7 +10,46 @@ export function ProductTable({ products, showCp, showVendor }: { products: Produ
   const vendors = useStore((s) => s.vendors);
   const cols = showCp ? "grid-cols-[minmax(10rem,1.6fr)_repeat(5,4.2rem)_1.5rem]" : "grid-cols-[minmax(10rem,1.6fr)_repeat(4,4.2rem)_1.5rem]";
   return (
-    <div className="-mx-4 overflow-x-auto px-4 pb-2">
+    <>
+    <div className="space-y-2 sm:hidden">
+      {products.map((p, i) => {
+        const c = currentPrice(p);
+        const pr = profitOf(c);
+        const st = stockState(p);
+        const cells: [string, React.ReactNode][] = [
+          ["Cost", <Chip key="c" kind="cost" value={c.cost} className="w-full min-w-0" />],
+          ["GST", <Chip key="g" kind="gst" value={c.gst} pct className="w-full min-w-0" />],
+          ["SP", <Chip key="s" kind="sp" value={c.sp} className="w-full min-w-0" />],
+          ...(showCp ? [["CP", <Chip key="cp" kind="cp" value={c.cp ?? c.cost} className="w-full min-w-0" />] as [string, React.ReactNode]] : []),
+          ["Profit", <Chip key="p" kind={pr >= 0 ? "profit" : "loss"} value={pr} className="w-full min-w-0" />],
+        ];
+        return (
+          <Link key={p.id} to="/products/$productId" params={{ productId: p.id }} className="glass animate-rise block rounded-2xl p-3 active:scale-[.99]" style={{ animationDelay: `${Math.min(i, 12) * 30}ms` }}>
+            <div className="flex min-w-0 items-center gap-3">
+              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-secondary text-2xl shadow-3d">{p.emoji}</span>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-sm font-semibold">{p.name}</span>
+                <span className="flex min-w-0 items-center gap-1.5 text-[11px] text-muted-foreground">
+                  <span className={cn("h-1.5 w-1.5 shrink-0 rounded-full", st === "in" ? "bg-sp" : st === "low" ? "bg-cp" : "bg-destructive")} />
+                  <span className="shrink-0">{st === "out" ? "Out of stock" : `${p.stock} ${p.unit}`}</span>
+                  {showVendor && <span className="truncate">· {vendors.find((v) => v.id === p.vendorId)?.name}</span>}
+                </span>
+              </span>
+              <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+            </div>
+            <div className={cn("mt-3 grid gap-1.5", showCp ? "grid-cols-5" : "grid-cols-4")}>
+              {cells.map(([l, el]) => (
+                <div key={l} className="min-w-0 text-center">
+                  <div className="mb-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{l}</div>
+                  {el}
+                </div>
+              ))}
+            </div>
+          </Link>
+        );
+      })}
+    </div>
+    <div className="-mx-4 hidden overflow-x-auto px-4 pb-2 sm:block">
       <div className={cn("min-w-max", "space-y-2")}>
         <div className={cn("grid items-center gap-2 px-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground", cols)}>
           <span>Product</span><span className="text-center">Cost ₹</span><span className="text-center">GST</span><span className="text-center">SP ₹</span>
@@ -50,6 +89,7 @@ export function ProductTable({ products, showCp, showVendor }: { products: Produ
         })}
       </div>
     </div>
+    </>
   );
 }
 
