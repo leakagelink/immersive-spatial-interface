@@ -3,7 +3,7 @@ import { RotateCcw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Empty, FilterPills, GhostButton } from "../ui3d";
 import { cn } from "@/lib/utils";
-import { fmt, useStore, type ActivityKind } from "@/lib/store";
+import { useStore, type ActivityKind } from "@/lib/store";
 import { Pill, Row, Section } from "./parts";
 
 const KINDS: { v: "all" | ActivityKind; l: string }[] = [
@@ -131,5 +131,3 @@ export function ActivityAdmin() {
     </div>
   );
 }
-
-export const _fmtGuard = fmt;
