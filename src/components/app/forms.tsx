@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
@@ -6,8 +6,9 @@ import {
   fmt, profitOf, today, useStore,
   type PriceEntry, type Product, type Vendor, type VendorType,
 } from "@/lib/store";
-import { PrimaryButton } from "./ui3d";
-import { FileText, Store, Tag } from "lucide-react";
+import { readPhoto } from "@/lib/photo";
+import { GhostButton, PrimaryButton } from "./ui3d";
+import { FileText, ImagePlus, Store, Tag, X } from "lucide-react";
 
 export const inputCls =
   "glass h-12 w-full rounded-2xl px-4 text-sm outline-none transition focus:ring-2 focus:ring-ring placeholder:text-muted-foreground";
@@ -51,7 +52,7 @@ export function VendorTypePicker({ value, onChange }: { value: VendorType; onCha
 }
 
 export interface PriceDraft { cost: string; gst: string; sp: string; cp: string; date: string; bill: string }
-export const emptyPrice = (): PriceDraft => ({ cost: "", gst: "5", sp: "", cp: "", date: today(), bill: "" });
+export const emptyPrice = (): PriceDraft => ({ cost: "", gst: String(useStore.getState().settings?.defaultGst ?? 5), sp: "", cp: "", date: today(), bill: "" });
 
 export function PriceFields({ d, set, showCp }: { d: PriceDraft; set: (d: PriceDraft) => void; showCp?: boolean | undefined }) {
   const p = profitOf({ cost: +d.cost || 0, sp: +d.sp || 0, cp: d.cp ? +d.cp : undefined });
@@ -107,6 +108,8 @@ export function validatePrice(d: PriceDraft): Omit<PriceEntry, "id"> | null {
 // ---------------- Product dialog ----------------
 export function ProductDialog({ open, onOpenChange, vendorId, product }: { open: boolean; onOpenChange: (o: boolean) => void; vendorId?: string | undefined; product?: Product }) {
   const { vendors, categories, addProduct, updateProduct } = useStore();
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [photo, setPhoto] = useState<string | undefined>();
   const [name, setName] = useState("");
   const [emoji, setEmoji] = useState("📦");
   const [cat, setCat] = useState("");
@@ -124,7 +127,8 @@ export function ProductDialog({ open, onOpenChange, vendorId, product }: { open:
     setVen(product?.vendorId ?? vendorId ?? vendors[0]?.id ?? "");
     setUnit(product?.unit ?? "pcs");
     setStock(String(product?.stock ?? 10));
-    setLow(String(product?.lowStockAt ?? 5));
+    setLow(String(product?.lowStockAt ?? useStore.getState().settings?.lowStockAt ?? 5));
+    setPhoto(product?.photo);
     setPrice(emptyPrice());
   }, [open, product, vendorId, categories, vendors]);
 
@@ -133,7 +137,7 @@ export function ProductDialog({ open, onOpenChange, vendorId, product }: { open:
   const save = () => {
     if (!name.trim()) { toast.error("Product name is required"); return; }
     if (!ven) { toast.error("Choose a vendor"); return; }
-    const base = { name: name.trim(), emoji, categoryId: cat, vendorId: ven, unit, stock: Math.max(0, +stock || 0), lowStockAt: Math.max(0, +low || 0) };
+    const base = { name: name.trim(), emoji, categoryId: cat, vendorId: ven, unit, stock: Math.max(0, +stock || 0), lowStockAt: Math.max(0, +low || 0), photo };
     if (product) {
       updateProduct(product.id, base);
       toast.success("Product updated");
@@ -155,6 +159,36 @@ export function ProductDialog({ open, onOpenChange, vendorId, product }: { open:
         <div className="space-y-4">
           <Field label="Product Name" required>
             <input className={inputCls} value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Nutella Spread" autoFocus />
+          </Field>
+          <Field label="Photo" hint="A picture makes the product easy to spot.">
+            <div className="flex items-center gap-3">
+              {photo ? (
+                <img src={photo} alt="" className="h-16 w-16 rounded-2xl object-cover ring-1 ring-border" />
+              ) : (
+                <span className="grid h-16 w-16 place-items-center rounded-2xl bg-secondary text-3xl">{emoji}</span>
+              )}
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  e.target.value = "";
+                  if (!f) return;
+                  readPhoto(f).then(setPhoto).catch(() => toast.error("Could not read that picture"));
+                }}
+              />
+              <GhostButton type="button" onClick={() => fileRef.current?.click()}>
+                <ImagePlus className="h-4 w-4 text-primary" />
+                {photo ? "Change" : "Upload"}
+              </GhostButton>
+              {photo && (
+                <button type="button" aria-label="Remove photo" onClick={() => setPhoto(undefined)} className="glass grid h-9 w-9 place-items-center rounded-xl text-destructive">
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
           </Field>
           <Field label="Icon">
             <div className="flex flex-wrap gap-1.5">

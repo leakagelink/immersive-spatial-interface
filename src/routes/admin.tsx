@@ -1,16 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { BarChart3, Boxes, Banknote, Download, History, LayoutGrid, Package, Pencil, Plus, RotateCcw, Settings, Trash2, Truck, Upload } from "lucide-react";
-import { useMemo, useRef, useState, type ReactNode } from "react";
+import { BarChart3, Banknote, Boxes, History, LayoutGrid, Package, Pencil, Plus, Settings, Trash2, Truck } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { EMOJIS, Field, inputCls, ProductDialog, VendorDialog } from "@/components/app/forms";
-import { Avatar3D, Cube3D, FilterPills, GhostButton, Page, PageHeader, PrimaryButton, SearchBox, StatusBadge } from "@/components/app/ui3d";
+import { Avatar3D, Cube3D, FilterPills, Page, PageHeader, PrimaryButton, SearchBox, StatusBadge } from "@/components/app/ui3d";
 import {
-  applyBulkPrice, currentPrice, fmt, marginOf, profitOf, stockState, today, useStore,
+  applyBulkPrice, currentPrice, fmt, profitOf, today, useStore,
   type BulkField, type BulkMode, type Category, type Product, type Vendor, type VendorType,
 } from "@/lib/store";
 import { cn } from "@/lib/utils";
-import { BulkBar, Check, Row, Section, Stat, useSelection, smallBtn } from "@/components/app/admin/parts";
+import { BulkBar, Check, Row, useSelection, smallBtn } from "@/components/app/admin/parts";
 import { Reports } from "@/components/app/admin/reports";
 import { StockAdmin } from "@/components/app/admin/stock";
 import { BillsAdmin } from "@/components/app/admin/bills";
@@ -311,5 +311,3 @@ function CategoriesAdmin() {
     </div>
   );
 }
-
-export { Stat, Section, useMemo, useRef, useState, type ReactNode, Download, Upload, RotateCcw, marginOf, stockState };
